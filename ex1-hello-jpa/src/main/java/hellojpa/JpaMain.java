@@ -16,37 +16,33 @@ public class JpaMain {
 		// EntityManager는 스레드간 공유 X(사용하고 버려야 함)
 		EntityManager em = emf.createEntityManager();
 		
-//		EntityTransaction et = em.getTransaction();
-//		et.begin();
+		EntityTransaction et = em.getTransaction();
 		
-		em.getTransaction().begin();
+		et.begin();
 		
 		try {
 			
 			// 등록 
 			Member member = new Member();
-			
-			member.setId(1L);
-			member.setName("HAN");
-			
 			Member member2 = new Member();
 			
-			member2.setId(2L);
-			member2.setName("PARK");
+			member.setUsername("HAN");
+			member2.setUsername("KIM");
 			
+			// 영속
 			em.persist(member);
 			em.persist(member2);
 //			
-//			em.getTransaction().commit();
+//			et.commit();
 			
 			// 조회 
 			Member findMember = em.find(Member.class, 1L);
 			
 			System.out.println(findMember.getId());
-			System.out.println(findMember.getName());
+			System.out.println(findMember.getUsername());
 			
 			// 수정 
-			findMember.setName("KIM");
+			findMember.setUsername("PARK");
 //			em.persist(findMember); <- 안해도 됨
 			// set으로 값만 바꿨을 뿐인데 update 쿼리문이 실행되는 이유는 JPA를 통해서 entity를 가져오면(find) 해당 entity를 JPA에서 관리한다.
 			// JPA가 데이터가 변경 됐는지 안됐는지(변경 감지) transaction을 commit하는 시점에 체크를 한다. 
@@ -65,7 +61,7 @@ public class JpaMain {
 			
 			System.out.println(findMembers.size());
 
-			em.getTransaction().commit();
+			et.commit();
 			
 			
 			// 삭제 
@@ -73,7 +69,7 @@ public class JpaMain {
 			
 		} catch (Exception e) {
 			
-			em.getTransaction().rollback();
+			et.rollback();
 			
 		} finally {
 			
