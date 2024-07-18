@@ -16,7 +16,7 @@ public class Member {
 	
 	private String name;
 	
-	private String city;
+	private String city; 
 	
 	private String street;
 	
