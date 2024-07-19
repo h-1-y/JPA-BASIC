@@ -61,11 +61,10 @@ public class JpaMain {
 			
 			System.out.println(findMembers.size());
 
-			et.commit();
-			
-			
 			// 삭제 
 //			em.remove(findMember);
+
+			et.commit();
 			
 		} catch (Exception e) {
 			
