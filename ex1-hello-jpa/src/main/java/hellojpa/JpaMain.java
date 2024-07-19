@@ -20,7 +20,7 @@ public class JpaMain {
 		
 		et.begin();
 		
-		try {
+		try { 
 			
 			// 등록 
 			Member member = new Member();
