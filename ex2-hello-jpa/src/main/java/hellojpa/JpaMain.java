@@ -31,7 +31,7 @@ public class JpaMain {
 			
 			player.setName("KIM");
 			// 1차 캐시에 저장된 team에서 ID를 꺼내 set
-//			player.setTeamId(team.getId());
+//			player.setTeamId(team.getId()); 
 			player.setTeam(team);
 			
 			em.persist(player);
