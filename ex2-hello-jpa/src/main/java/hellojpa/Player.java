@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 // 연관 관계 매핑 
 @Entity
@@ -17,8 +19,12 @@ public class Player {
 	@Column(name = "PLAYER_NAME")
 	private String name;
 	
-	@Column(name = "TEAM_ID")
-	private Long teamId;
+//	@Column(name = "TEAM_ID")
+//	private Long teamId;
+	
+	@ManyToOne // N(Player) : 1(Team)
+	@JoinColumn(name = "TEAM_ID") // join 컬럼을 명시 
+	private Team team;
 
 	public Long getId() {
 		return id;
@@ -36,12 +42,12 @@ public class Player {
 		this.name = name;
 	}
 
-	public Long getTeamId() {
-		return teamId;
+	public Team getTeam() {
+		return team;
 	}
 
-	public void setTeamId(Long teamId) {
-		this.teamId = teamId;
+	public void setTeam(Team team) {
+		this.team = team;
 	}
-	
+
 }
