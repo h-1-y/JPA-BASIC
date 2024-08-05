@@ -22,6 +22,7 @@ public class Player {
 //	@Column(name = "TEAM_ID")
 //	private Long teamId;
 	
+	// 양방향 연관관계 세팅 
 	@ManyToOne // N(Player) : 1(Team)
 	@JoinColumn(name = "TEAM_ID") // join 컬럼을 명시 
 	private Team team;
@@ -46,8 +47,12 @@ public class Player {
 		return team;
 	}
 
-	public void setTeam(Team team) {
+	public void changeTeam(Team team) {
 		this.team = team;
+		
+		// 양방향 연관관계를 위한 편의 메소드
+		team.getPlayers().add(this);
+		
 	}
 
 }

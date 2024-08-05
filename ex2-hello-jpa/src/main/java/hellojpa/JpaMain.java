@@ -32,18 +32,28 @@ public class JpaMain {
 			player.setName("KIM");
 			// 1차 캐시에 저장된 team에서 ID를 꺼내 set
 //			player.setTeamId(team.getId()); 
-			player.setTeam(team);
+			player.changeTeam(team);
+			
+			Player player2 = new Player();
+			player2.setName("HAN");
+			player2.changeTeam(team);
 			
 			em.persist(player);
+			em.persist(player2);
+			
+//			em.flush();
+//			em.clear();
 			
 			// 현재는 연관관계 매핑이 돼 있지 않기 때문에 Player를 먼저 조회 후 
 			// 조회된 Player의 TeamId를 통해 Team 객체 조회 
 			// 객체지향적이지 못하다. 
 			Player getPlayer = em.find(Player.class, player.getId());
 //			Team getTeam = em.find(Team.class, getPlayer.getTeamId());
-			Team getTeam = getPlayer.getTeam();
+//			Team getTeam = getPlayer.getTeam();
+			List<Player> getPlayers = getPlayer.getTeam().getPlayers();
 			
-			System.out.println(getTeam.getName());
+			for ( Player p : getPlayers ) 
+				System.out.println(p.getName());
 			
 			et.commit();
 			
