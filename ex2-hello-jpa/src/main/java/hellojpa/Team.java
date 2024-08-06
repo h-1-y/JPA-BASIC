@@ -24,6 +24,11 @@ public class Team {
 	// mappedBy - 어떤 객체와 연관 되어있는지 작성 ( 연관관계의 주인이 아닌경우 mappedBy 지정 / 주인이 아닌쪽은 읽기만 가능 )
 	private List<Player> players = new ArrayList<>();
 
+	public void addMember(Player player) {
+		player.setTeam(this);
+		players.add(player);
+	}
+	
 	public Long getId() {
 		return id;
 	}

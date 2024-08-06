@@ -47,6 +47,10 @@ public class Player {
 		return team;
 	}
 
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+	
 	public void changeTeam(Team team) {
 		this.team = team;
 		
