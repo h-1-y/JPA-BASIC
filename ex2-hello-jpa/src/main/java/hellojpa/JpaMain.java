@@ -27,16 +27,27 @@ public class JpaMain {
 			
 			em.persist(team);
 			
+			Locker locker = new Locker();
+			locker.setName("locker 1");
+			
+			Locker locker2 = new Locker();
+			locker2.setName("locker 2");
+			
+			em.persist(locker);
+			em.persist(locker2);
+			
 			Player player = new Player();
 			
 			player.setName("KIM");
 			// 1차 캐시에 저장된 team에서 ID를 꺼내 set
 //			player.setTeamId(team.getId()); 
 			player.changeTeam(team);
+			player.setLocker(locker);
 			
 			Player player2 = new Player();
 			player2.setName("HAN");
 			player2.changeTeam(team);
+			player2.setLocker(locker2);
 			
 			em.persist(player);
 			em.persist(player2);
