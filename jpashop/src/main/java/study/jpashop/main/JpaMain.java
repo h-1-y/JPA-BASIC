@@ -5,6 +5,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import study.jpashop.domain.Book;
+
 public class JpaMain {
 
 	public static void main(String[] args) {
@@ -19,6 +21,16 @@ public class JpaMain {
 		et.begin();
 		
 		try {
+			
+			Book book = new Book();
+			
+			book.setName("JPA");
+			book.setAuthor("김영한");
+			book.setPrice(15000);
+			book.setStockQuantity(100);
+			book.setIsbn("1111-2222-4444-3333");
+			
+			em.persist(book);
 			
 			et.commit();
 			

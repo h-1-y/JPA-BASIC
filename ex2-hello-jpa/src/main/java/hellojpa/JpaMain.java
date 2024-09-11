@@ -1,11 +1,16 @@
 package hellojpa;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+
+import hellojpa.item.Album;
+import hellojpa.item.Item;
+import hellojpa.item.Movie;
 
 public class JpaMain {
 
@@ -24,6 +29,8 @@ public class JpaMain {
 			
 			Team team = new Team();
 			team.setName("Team_A");
+			team.setInUser("ADMIN");
+			team.setInDate(LocalDateTime.now());
 			
 			em.persist(team);
 			
@@ -43,11 +50,15 @@ public class JpaMain {
 //			player.setTeamId(team.getId()); 
 			player.changeTeam(team);
 			player.setLocker(locker);
+			player.setInUser("KIM");
+			player.setInDate(LocalDateTime.now());
 			
 			Player player2 = new Player();
 			player2.setName("HAN");
 			player2.changeTeam(team);
 			player2.setLocker(locker2);
+			player2.setInUser("HAN");
+			player2.setInDate(LocalDateTime.now());
 			
 			em.persist(player);
 			em.persist(player2);
@@ -65,6 +76,34 @@ public class JpaMain {
 			
 			for ( Player p : getPlayers ) 
 				System.out.println(p.getName());
+			
+			Movie movie = new Movie();
+			
+			movie.setDirector("AAA");
+			movie.setActor("BBB");
+			movie.setName("영화제목입니당");
+			movie.setPrice(15000);
+			
+			em.persist(movie);
+
+			Album album = new Album();
+			
+			album.setArtist("AAA");
+			album.setName("앨범임당");
+			album.setPrice(10000);
+			
+			em.persist(album);
+			
+			em.flush();
+			em.clear();
+			
+//			Movie findMovie = em.find(Movie.class, movie.getId());
+			
+//			System.out.println("findMovie.getName() ===== " + findMovie.getName());
+			
+			Item findItem = em.find(Item.class, movie.getId());
+			
+			System.out.println("findItem.getName() ==== " + findItem.getName());
 			
 			et.commit();
 			

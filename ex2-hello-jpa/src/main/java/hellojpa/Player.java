@@ -13,9 +13,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import hellojpa.baseEntity.BaseEntity;
+
 // 연관 관계 매핑 
 @Entity
-public class Player {
+public class Player extends BaseEntity {
 
 	@Id
 	@GeneratedValue

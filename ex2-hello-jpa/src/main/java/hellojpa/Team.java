@@ -9,8 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import hellojpa.baseEntity.BaseEntity;
+
 @Entity
-public class Team {
+public class Team extends BaseEntity {
 
 	@Id
 	@GeneratedValue
