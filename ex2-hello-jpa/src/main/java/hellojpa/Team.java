@@ -22,13 +22,13 @@ public class Team extends BaseEntity {
 	private String name;
 	
 	// 양방향 연관관계 세팅 
-	@OneToMany(mappedBy = "team") // 1(Team) : N(Player) 
+	@OneToMany(mappedBy = "team") // 1(Team) : N(Member) 
 	// mappedBy - 어떤 객체와 연관 되어있는지 작성 ( 연관관계의 주인이 아닌경우 mappedBy 지정 / 주인이 아닌쪽은 읽기만 가능 )
-	private List<Player> players = new ArrayList<>();
+	private List<Member> members = new ArrayList<>();
 
-	public void addMember(Player player) {
-		player.setTeam(this);
-		players.add(player);
+	public void addMember(Member member) {
+		member.setTeam(this);
+		members.add(member);
 	}
 	
 	public Long getId() {
@@ -47,12 +47,12 @@ public class Team extends BaseEntity {
 		this.name = name;
 	}
 
-	public List<Player> getPlayers() {
-		return players;
+	public List<Member> getMembers() {
+		return members;
 	}
 
-	public void setPlayers(List<Player> players) {
-		this.players = players;
+	public void setMembers(List<Member> members) {
+		this.members = members;
 	}
 	
 }

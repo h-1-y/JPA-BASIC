@@ -27,12 +27,18 @@ public class JpaMain {
 		
 		try {
 			
-			Team team = new Team();
-			team.setName("Team_A");
-			team.setInUser("ADMIN");
-			team.setInDate(LocalDateTime.now());
+			Team team1 = new Team();
+			team1.setName("Team_A");
+			team1.setInUser("ADMIN");
+			team1.setInDate(LocalDateTime.now());
 			
-			em.persist(team);
+			Team team2 = new Team();
+			team2.setName("Team_B");
+			team2.setInUser("ADMIN");
+			team2.setInDate(LocalDateTime.now());
+			
+			em.persist(team1);
+			em.persist(team2);
 			
 			Locker locker = new Locker();
 			locker.setName("locker 1");
@@ -43,39 +49,39 @@ public class JpaMain {
 			em.persist(locker);
 			em.persist(locker2);
 			
-			Player player = new Player();
+			Member member = new Member();
 			
-			player.setName("KIM");
+			member.setName("KIM");
 			// 1차 캐시에 저장된 team에서 ID를 꺼내 set
-//			player.setTeamId(team.getId()); 
-			player.changeTeam(team);
-			player.setLocker(locker);
-			player.setInUser("KIM");
-			player.setInDate(LocalDateTime.now());
+//			member.setTeamId(team.getId()); 
+			member.changeTeam(team1);
+			member.setLocker(locker);
+			member.setInUser("KIM");
+			member.setInDate(LocalDateTime.now());
 			
-			Player player2 = new Player();
-			player2.setName("HAN");
-			player2.changeTeam(team);
-			player2.setLocker(locker2);
-			player2.setInUser("HAN");
-			player2.setInDate(LocalDateTime.now());
+			Member member2 = new Member();
+			member2.setName("HAN");
+			member2.changeTeam(team2);
+			member2.setLocker(locker2);
+			member2.setInUser("HAN");
+			member2.setInDate(LocalDateTime.now());
 			
-			em.persist(player);
-			em.persist(player2);
+			em.persist(member);
+			em.persist(member2);
 			
 //			em.flush();
 //			em.clear();
 			
-			// 현재는 연관관계 매핑이 돼 있지 않기 때문에 Player를 먼저 조회 후 
-			// 조회된 Player의 TeamId를 통해 Team 객체 조회 
+			// 현재는 연관관계 매핑이 돼 있지 않기 때문에 Member를 먼저 조회 후 
+			// 조회된 Member의 TeamId를 통해 Team 객체 조회 
 			// 객체지향적이지 못하다. 
-			Player getPlayer = em.find(Player.class, player.getId());
-//			Team getTeam = em.find(Team.class, getPlayer.getTeamId());
-//			Team getTeam = getPlayer.getTeam();
-			List<Player> getPlayers = getPlayer.getTeam().getPlayers();
+//			Member getMember = em.find(Member.class, member.getId());
+//			Team getTeam = em.find(Team.class, getMember.getTeamId());
+//			Team getTeam = getMember.getTeam();
+//			List<Member> getMembers = getMember.getTeam().getMembers();
 			
-			for ( Player p : getPlayers ) 
-				System.out.println(p.getName());
+//			for ( Member m : getMembers ) 
+//				System.out.println(m.getName());
 			
 			Movie movie = new Movie();
 			
@@ -97,19 +103,43 @@ public class JpaMain {
 			em.flush();
 			em.clear();
 			
-//			Movie findMovie = em.find(Movie.class, movie.getId());
+			// em.find( ~~ )
+			// Member를 조회하지만 Member와 연관된 Team, Locker 모두 조인하여 가지고 온다.
+//			Member findMember = em.find(Member.class, member.getId());
+//			
+//			System.out.println("findMember.getId() ==== " + findMember.getId());
+//			System.out.println("findMember.getName() ===== " + findMember.getName());
+//			System.out.println("findMember.getTeam().getName() ==== " + findMember.getTeam().getName());
+//			System.out.println("findMember.getLocker().getName() ==== " + findMember.getLocker().getName());
 			
-//			System.out.println("findMovie.getName() ===== " + findMovie.getName());
+			List<Member> members = em.createQuery("select m from Member m", Member.class)
+									.getResultList();
 			
-			Item findItem = em.find(Item.class, movie.getId());
+			Parent parent = new Parent();
 			
-			System.out.println("findItem.getName() ==== " + findItem.getName());
+			Child child1 = new Child();
+			Child child2 = new Child();
+			
+			parent.addChild(child1);
+			parent.addChild(child2);
+			
+			em.persist(parent);
+			
+			em.flush();
+			em.clear();
+			
+			Parent findParent = em.find(Parent.class, parent.getId());
+			
+			System.out.println("findParent.getChilds().size() ===== " + findParent.getChilds().size());
+			findParent.getChilds().remove(0);
+			System.out.println("findParent.getChilds().size() ===== " + findParent.getChilds().size());
 			
 			et.commit();
 			
 		} catch (Exception e) {
 			
 			et.rollback();
+			e.printStackTrace();
 			
 		} finally {
 			

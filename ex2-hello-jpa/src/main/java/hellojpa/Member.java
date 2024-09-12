@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,30 +18,30 @@ import hellojpa.baseEntity.BaseEntity;
 
 // 연관 관계 매핑 
 @Entity
-public class Player extends BaseEntity {
+public class Member extends BaseEntity {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "PLAYER_ID")
+	@Column(name = "MEMBER_ID")
 	private Long id;
 	
-	@Column(name = "PLAYER_NAME")
+	@Column(name = "MEMBER_NAME")
 	private String name;
 	
 //	@Column(name = "TEAM_ID")
 //	private Long teamId;
 	
 	// 양방향 연관관계 세팅 
-	@ManyToOne // N(Player) : 1(Team)
+	@ManyToOne(fetch = FetchType.LAZY) // N(Member) : 1(Team)
 	@JoinColumn(name = "TEAM_ID") // join 컬럼을 명시 
 	private Team team;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "LOCKER_ID") // 일대일 관계 매핑 
 	private Locker locker;
 	
 	@ManyToMany
-	@JoinTable(name = "PLAYER_PRODUCT")
+	@JoinTable(name = "MEMBER_PRODUCT")
 	private List<Product> products = new ArrayList<>();
 	
 	public Long getId() {
@@ -71,7 +72,7 @@ public class Player extends BaseEntity {
 		this.team = team;
 		
 		// 양방향 연관관계를 위한 편의 메소드
-		team.getPlayers().add(this);
+		team.getMembers().add(this);
 		
 	}
 
