@@ -59,12 +59,23 @@ public class JpaMain {
 			member.setInUser("KIM");
 			member.setInDate(LocalDateTime.now());
 			
+			// 임베디드 타입
+			member.setHomeAddress(new Address("city", "street", "zipcode"));
+			member.setWorkAddress(new Address("work_city", "work_street", "work_zipcode"));
+			member.setWorkPeriod(new Period(LocalDateTime.now(), LocalDateTime.now()));
+			
 			Member member2 = new Member();
+			
 			member2.setName("HAN");
 			member2.changeTeam(team2);
 			member2.setLocker(locker2);
 			member2.setInUser("HAN");
 			member2.setInDate(LocalDateTime.now());
+			
+			// 임베디드 타입
+			member2.setHomeAddress(new Address("city2", "street2", "zipcode2"));
+			member2.setWorkAddress(new Address("work_city2", "work_street2", "work_zipcode2"));
+			member2.setWorkPeriod(new Period(LocalDateTime.now(), LocalDateTime.now()));
 			
 			em.persist(member);
 			em.persist(member2);
