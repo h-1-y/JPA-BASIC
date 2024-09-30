@@ -2,7 +2,9 @@ package hellojpa;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -32,22 +34,12 @@ public class JpaMain {
 			team1.setInUser("ADMIN");
 			team1.setInDate(LocalDateTime.now());
 			
-			Team team2 = new Team();
-			team2.setName("Team_B");
-			team2.setInUser("ADMIN");
-			team2.setInDate(LocalDateTime.now());
-			
 			em.persist(team1);
-			em.persist(team2);
 			
 			Locker locker = new Locker();
 			locker.setName("locker 1");
 			
-			Locker locker2 = new Locker();
-			locker2.setName("locker 2");
-			
 			em.persist(locker);
-			em.persist(locker2);
 			
 			Member member = new Member();
 			
@@ -64,21 +56,15 @@ public class JpaMain {
 			member.setWorkAddress(new Address("work_city", "work_street", "work_zipcode"));
 			member.setWorkPeriod(new Period(LocalDateTime.now(), LocalDateTime.now()));
 			
-			Member member2 = new Member();
+			// 값 타입 컬렉션 
+			member.getFavoriteFoods().add("치킨");
+			member.getFavoriteFoods().add("피자");
+			member.getFavoriteFoods().add("족발");
 			
-			member2.setName("HAN");
-			member2.changeTeam(team2);
-			member2.setLocker(locker2);
-			member2.setInUser("HAN");
-			member2.setInDate(LocalDateTime.now());
-			
-			// 임베디드 타입
-			member2.setHomeAddress(new Address("city2", "street2", "zipcode2"));
-			member2.setWorkAddress(new Address("work_city2", "work_street2", "work_zipcode2"));
-			member2.setWorkPeriod(new Period(LocalDateTime.now(), LocalDateTime.now()));
+			member.getAddressHistory().add(new Address("old city", "old street", "old zipcode"));
+			member.getAddressHistory().add(new Address("old city2", "old street2", "old zipcode2"));
 			
 			em.persist(member);
-			em.persist(member2);
 			
 //			em.flush();
 //			em.clear();
@@ -123,9 +109,9 @@ public class JpaMain {
 //			System.out.println("findMember.getTeam().getName() ==== " + findMember.getTeam().getName());
 //			System.out.println("findMember.getLocker().getName() ==== " + findMember.getLocker().getName());
 			
-			List<Member> members = em.createQuery("select m from Member m", Member.class)
-									.getResultList();
-			
+//			List<Member> members = em.createQuery("select m from Member m", Member.class)
+//									.getResultList();
+//			
 			Parent parent = new Parent();
 			
 			Child child1 = new Child();
@@ -144,6 +130,24 @@ public class JpaMain {
 			System.out.println("findParent.getChilds().size() ===== " + findParent.getChilds().size());
 			findParent.getChilds().remove(0);
 			System.out.println("findParent.getChilds().size() ===== " + findParent.getChilds().size());
+			
+			System.out.println("----------------- START --------------");
+			Member findMember = em.find(Member.class, member.getId());
+			
+			// 값 타입 컬렉션( @ElementCollection ) 은 기본적으로 LAZY(지연로딩)
+			List<Address> findMemberAddressHistory = findMember.getAddressHistory();
+			for ( Address adrs : findMemberAddressHistory ) System.out.println("adrs.getCity() === " + adrs.getCity());
+			
+			Set<String> findMemberFavoriteFood = findMember.getFavoriteFoods();
+			for ( String food : findMemberFavoriteFood ) System.out.println("food ======= " + food);
+			
+			// 값 타입 컬렉션 수정
+			findMember.getFavoriteFoods().remove("피자");
+			findMember.getFavoriteFoods().add("닭가슴살");
+			
+			// 컬렉션은 대상을 찾을시 대부분 equlas 메서드를 사용하므로 equals 메소드 재정의 필요
+			findMember.getAddressHistory().remove(new Address("old city", "old street", "old zipcode"));
+			findMember.getAddressHistory().add(new Address("new city", "new street", "new zipcode"));
 			
 			et.commit();
 			
