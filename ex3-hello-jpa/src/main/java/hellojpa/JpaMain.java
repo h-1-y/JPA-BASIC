@@ -47,7 +47,7 @@ public class JpaMain {
 		} catch (Exception e) {
 			 
 			et.rollback();
-			e.printStackTrace();
+			e.printStackTrace(); 
 			
 		} finally {
 			
