@@ -45,7 +45,7 @@ public class JpaMain {
 			List<Member> resultList = em.createQuery(cq).getResultList();
 			
 		} catch (Exception e) {
-			
+			 
 			et.rollback();
 			e.printStackTrace();
 			
