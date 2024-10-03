@@ -9,13 +9,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import hellojpa.item.Album;
-import hellojpa.item.Item;
-import hellojpa.item.Movie;
 
 public class JpaMain {
 
@@ -32,17 +30,38 @@ public class JpaMain {
 		
 		try {
 			
-			// JPQL
-			List<Member> members = em.createQuery("select m from Member m where m.name like '%kim%'", Member.class).getResultList();
+			Team team = new Team();
 			
-			// JAVA 표준 스펙 Criteria
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-			CriteriaQuery<Member> query = cb.createQuery(Member.class);
+			team.setName("team A");
 			
-			Root<Member> m = query.from(Member.class);
+			em.persist(team);
 			
-			CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("name"), "kim"));
-			List<Member> resultList = em.createQuery(cq).getResultList();
+			Member member = new Member();
+			
+			member.setUsername("my name");
+			member.setAge(20);
+			member.setTeam(team);
+			
+			em.persist(member);
+			
+			// JPQL ( Java Persistence Query Language )
+			
+			// TypeQuery, Query
+			// TypeQyery : 반환 타입이 명확할 때 사용 
+			TypedQuery<Member> typedQuery = em.createQuery("select m from Member m", Member.class);
+			
+			// Query : 반환 타입이 명확하지 않을 때 사용 -> m.username은 String, m.age는 int 
+			// 쿼리 결과의 반환 타입이 명확하지 않을 때 사용
+			Query query = em.createQuery("select m.username, m.age from Member m");
+			
+			// 파라미터 바인딩 : <- 사용
+			Member members = em.createQuery("select m from Member m where m.username = :username", Member.class)
+									.setParameter("username", "my name")
+									.getSingleResult();
+			
+			System.out.println("member.getUsername() === " + member.getUsername());
+			
+			et.commit();
 			
 		} catch (Exception e) {
 			 
