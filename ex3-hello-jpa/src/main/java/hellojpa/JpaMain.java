@@ -36,13 +36,17 @@ public class JpaMain {
 			
 			em.persist(team);
 			
-			Member member = new Member();
-			
-			member.setUsername("my name");
-			member.setAge(20);
-			member.setTeam(team);
-			
-			em.persist(member);
+			for ( int i=1; i<=100; i++ ) {
+				
+				Member member = new Member();
+				
+				member.setUsername("username" + i);
+				member.setAge(i);
+				member.setTeam(team);
+				
+				em.persist(member);
+				
+			}
 			
 			// JPQL ( Java Persistence Query Language )
 			
@@ -56,10 +60,44 @@ public class JpaMain {
 			
 			// 파라미터 바인딩 : <- 사용
 			Member members = em.createQuery("select m from Member m where m.username = :username", Member.class)
-									.setParameter("username", "my name")
-									.getSingleResult();
+									.setParameter("username", "username1")
+									.getSingleResult(); // SingleResult 사용시 값이 없거나 1개 이상이면 Exception
 			
-			System.out.println("member.getUsername() === " + member.getUsername());
+			
+			// 프로젝션 = select 절에서 조회할 대상을 지정하는 것 
+			// 엔티티 프로젝션 
+			em.createQuery("select m from Member m", Member.class);
+			em.createQuery("select m.team from Member m", Team.class);
+			
+			// 임베디드 타입 프로젝션 
+			em.createQuery("select o.address from Order o", Address.class);
+			
+			// 스칼라 타입 프로젝션
+			em.createQuery("select m.username, m.age from Member m");
+			
+			// 프로젝션 여러 값 조회 - Query, Object[], new 명령어
+			// Query 타입으로 조회 
+			Query query1 = em.createQuery("select m.username, m.age from Member m");
+			
+			// Objec[] 타입으로 조회
+			List<Object[]> objectList = em.createQuery("select m.username, m.age from Member m").getResultList();
+			
+			Object [] o = objectList.get(0);
+			
+			System.out.println("o[0] ==== " + o[0]);
+			System.out.println("o[1] ==== " + o[1]);
+			
+			// new 명령어로 조회 
+			// 단순 값을 DTO로 바로 조회, 패키지 명을 포함한 전체 클래스명 입력, 순서와 타입이 일치하는 생성자 필요
+			List<MemberDTO> resultList = em.createQuery("select new hellojpa.MemberDTO(m.username, m.age) from Member m", MemberDTO.class).getResultList();
+			
+			// JPQL Paging 처리 
+			List<Member> pagingMembers = em.createQuery("select m from Member m order by m.age desc", Member.class)
+						.setFirstResult(0) // 0번째부터 
+						.setMaxResults(10) // 10개 가져온다
+						.getResultList();
+			
+			for ( Member m : pagingMembers ) System.out.println(m.toString());
 			
 			et.commit();
 			
