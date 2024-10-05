@@ -99,6 +99,32 @@ public class JpaMain {
 			
 			for ( Member m : pagingMembers ) System.out.println(m.toString());
 			
+			em.flush();
+			em.clear();
+			
+			// JPQL Join
+			// inner join
+			String joinQuery = "select m from Member m inner join m.team t";
+			// left outer join
+//			String joinQuery = "select m from Member m left outer join m.team t";
+			// theta join
+//			String joinQuery = "select m from Member m, Team t where m.username = t.name";
+			List<Member> result = em.createQuery(joinQuery, Member.class).getResultList();
+			
+			em.flush();
+			em.clear();
+			
+			// ON 절 사용
+//			String onQuery = "select m from Member m left outer join m.team t on t.name = 'team A'";
+			String onQuery = "select m from Member m left outer join Team t on m.username = t.name";
+			List<Member> onResult = em.createQuery(onQuery, Member.class).getResultList();
+			
+			
+			// JPQL SubQuery 서브쿼리
+			// JPQL의 subquery는 where, having 절에서만 가능 hibernate는 select 절도 가능 FROM 절의 subquery는 JPQL에서는 불가능 X
+			String subQuery = "select m from Member m where m.age > (select avg(m2.age) from Member m2)";
+			List<Member> subResult = em.createQuery(subQuery, Member.class).getResultList();
+			
 			et.commit();
 			
 		} catch (Exception e) {
