@@ -44,6 +44,9 @@ public class JpaMain {
 				member.setAge(i);
 				member.setTeam(team);
 				
+				if ( i%2 == 0 ) member.setType(MemberType.USER);
+				else member.setType(MemberType.ADMIN);
+				
 				em.persist(member);
 				
 			}
@@ -124,6 +127,23 @@ public class JpaMain {
 			// JPQL의 subquery는 where, having 절에서만 가능 hibernate는 select 절도 가능 FROM 절의 subquery는 JPQL에서는 불가능 X
 			String subQuery = "select m from Member m where m.age > (select avg(m2.age) from Member m2)";
 			List<Member> subResult = em.createQuery(subQuery, Member.class).getResultList();
+			
+			
+			// JPQL 타입 표현
+			// 문자 : 'Hello', 'She"s'
+			// 숫자 : 10L(Long), 10D(Double), 10F(Float)
+			// Boolean : TURE, FALSE
+			// enum : hellojpa.MemberType (패키지명 포함)
+			// Entity : TYPE(m) = Member (상속관계에서 사용)
+//			String typeQuery = "select m.username, 'HELLO', true from Member m where m.type = hellojpa.MemberType.ADMIN";
+			String typeQuery = "select m.username, 'HELLO', true from Member m where m.type = :userType";
+			List<Object[]> typeResult = em.createQuery(typeQuery).setParameter("userType", MemberType.ADMIN).getResultList();
+			
+			for ( Object [] obj : typeResult ) {
+				System.out.println("obj[0] == " + obj[0]);
+				System.out.println("obj[1] == " + obj[1]);
+				System.out.println("obj[2] == " + obj[2]);
+			}
 			
 			et.commit();
 			
