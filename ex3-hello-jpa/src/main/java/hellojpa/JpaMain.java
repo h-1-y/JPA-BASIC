@@ -147,7 +147,7 @@ public class JpaMain {
 			
 			et.commit();
 			
-		} catch (Exception e) {
+		} catch (Exception e) { 
 			 
 			et.rollback();
 			e.printStackTrace(); 
