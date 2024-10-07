@@ -36,7 +36,7 @@ public class JpaMain {
 			
 			em.persist(team);
 			
-			for ( int i=1; i<=100; i++ ) {
+			for ( int i=1; i<=20; i++ ) {
 				
 				Member member = new Member();
 				
@@ -144,6 +144,34 @@ public class JpaMain {
 				System.out.println("obj[1] == " + obj[1]);
 				System.out.println("obj[2] == " + obj[2]);
 			}
+			
+			
+			// JPQL 조건식
+			// case
+			String caseQuery = "select " + 
+							   "case when m.age <= 10 then '학생요금' " +
+							   "when m.age >= 60 then '경로요금' " +
+							   "else '일반요금' end " +
+							   "from Member m";
+			// coalesce
+//			String caseQuery = "select coalesce(m.username, '이름 없는 회원') from Member m";
+			// nullif
+//			String caseQuery = "select nullif(m.username, 'admin') from Member m";
+			
+			List<String> caseResult = em.createQuery(caseQuery, String.class).getResultList();
+			for ( String str : caseResult ) System.out.println(str);
+			
+			
+			// JPQL 기본 함수
+			// concat, substring, trim, lower, upper, length, locate, abs, sqrt, mod, size, index
+			String basicQuery = "select concat('a', 'b') from Member m";
+			
+			
+			// 경로 표현식
+			// 단일 값 연관 경로
+			// select m.team from Member e <- 묵시적 내부조인 발생 (Team을 가져오기 위해 Member와 Team을 조인한 쿼리가 나감)
+			// 컬렉션 값 연관 경로
+			// select t.members from Team t <- 묵시적 내부조인 발생 + 탐색 X 
 			
 			et.commit();
 			
