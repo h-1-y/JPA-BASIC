@@ -173,10 +173,6 @@ public class JpaMain {
 			// 컬렉션 값 연관 경로
 			// select t.members from Team t <- 묵시적 내부조인 발생 + 탐색 X 
 			
-			
-			// fetch join 실무에서 엄청 중요함!!
-			
-			
 			et.commit();
 			
 		} catch (Exception e) { 
