@@ -52,3 +52,8 @@
 # 2024. 10. 07
 - JPQL 조건식과 함수
 - fetch join
+
+# 2024. 10. 10
+- fetch join
+- Named Query
+- 벌크 연산
